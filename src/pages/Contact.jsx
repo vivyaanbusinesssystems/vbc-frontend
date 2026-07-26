@@ -42,7 +42,7 @@ export default function Contact() {
                             <a href="tel:+919151566767" className="hover:text-brand">+91 91515 66767</a>
                         </ContactCard>
                         <ContactCard icon={Mail} title="Email">
-                            <a href="mailto:support@vivyaan.com" className="hover:text-brand">support@vivyaan.com</a>
+                            <a href="mailto:support@vivyaan.com" className="hover:text-brand">support@vivyaanbusinesssystems.com</a>
                         </ContactCard>
                         <ContactCard icon={Clock} title="Business Hours">
                             Mon – Fri: 9:00 AM – 7:00 PM IST<br />Sat: 10:00 AM – 2:00 PM IST
