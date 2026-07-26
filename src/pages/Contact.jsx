@@ -17,10 +17,7 @@ export default function Contact() {
     }, []);
 
     return (
-        // Added 'overflow-x-hidden' to prevent any horizontal leaking on mobile
         <div className={`overflow-x-hidden transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
-
-            {/* Adjusted padding for mobile/desktop parity */}
             <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20">
                 <div className="container-page max-w-3xl text-center">
                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Contact</p>
@@ -33,9 +30,7 @@ export default function Contact() {
             </section>
 
             <section className="py-12 sm:py-20">
-                {/* min-w-0 added to the grid container so its tracks are allowed to shrink below content's intrinsic width */}
                 <div className="container-page grid lg:grid-cols-5 gap-8 lg:gap-10 min-w-0">
-                    {/* min-w-0 added: without it, this grid item can't shrink below the min-content size of its children (the iframe below), causing horizontal overflow on mobile */}
                     <div className="lg:col-span-2 min-w-0 space-y-4 sm:space-y-6">
                         <ContactCard icon={MapPin} title="Head Office">
                             1157/9 Naya Nagar South<br />Sirwara Road Sultanpur, 228001<br />Uttar Pradesh, India
@@ -50,8 +45,6 @@ export default function Contact() {
                             Mon – Fri: 9:00 AM – 7:00 PM IST<br />Sat: 10:00 AM – 2:00 PM IST
                         </ContactCard>
 
-                        {/* Interactive Grayscale Map */}
-                        {/* min-w-0 added here too: this is the direct parent of the iframe, the actual source of the overflow */}
                         <div className="w-full min-w-0 h-62.5 sm:h-100 rounded-2xl sm:rounded-3xl overflow-hidden border border-border shadow-card relative mt-6">
                             <iframe
                                 title="Vivyaan Business Systems Location"
@@ -60,19 +53,7 @@ export default function Contact() {
                                 marginHeight="0"
                                 marginWidth="0"
                                 src="https://www.openstreetmap.org/export/embed.html?bbox=82.0528%2C26.2446%2C82.0928%2C26.2846&layer=mapnik&marker=26.2646%2C82.0728"
-                                /*
-                                  Removed the HTML width="100%"/height="100%" attributes.
-                                  Browsers use an iframe's *default* intrinsic size (300px)
-                                  when computing the min-content size of its grid/flex
-                                  container, even when a CSS percentage width is present.
-                                  That phantom 300px was wider than the available column
-                                  on narrow phones, which is what pushed the page wide and
-                                  produced the blank strip on the right. Sizing purely via
-                                  Tailwind's w-full/h-full (a real CSS 100% with no
-                                  intrinsic fallback contribution once min-w-0 is set on
-                                  the ancestors) avoids that.
-                                */
-                                className="w-full h-full block grayscale-20 contrast-125 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                                className="w-full h-full block grayscale-20ntrast-125 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
                             ></iframe>
 
                             <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-10">
@@ -105,12 +86,10 @@ export default function Contact() {
 
 function ContactCard({ icon: Icon, title, children }) {
     return (
-        // Added 'w-full' and 'overflow-hidden' to strictly bind the card to its container
         <div className="flex w-full overflow-hidden gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6 hover:border-brand/40 transition-colors">
             <div className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
                 <Icon className="h-5 w-5" />
             </div>
-            {/* Added 'overflow-hidden' and 'break-words' to prevent long unbroken text from pushing the width */}
             <div className="min-w-0 flex-1 overflow-hidden">
                 <h3 className="font-bold text-foreground text-sm sm:text-base">{title}</h3>
                 <div className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed wrap-break-word">{children}</div>
@@ -121,58 +100,143 @@ function ContactCard({ icon: Icon, title, children }) {
 
 function EnquiryForm() {
     const [submitting, setSubmitting] = useState(false);
+    const [errors, setErrors] = useState({});
 
-    const onSubmit = (e) => {
+    // Validates the form data and returns an object containing any errors
+    const validateForm = (data) => {
+        const newErrors = {};
+
+        if (!data.name?.trim()) newErrors.name = "Please enter your full name.";
+        if (!data.company?.trim()) newErrors.company = "Company name is required.";
+
+        if (!data.email?.trim()) {
+            newErrors.email = "Email address is required.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+            newErrors.email = "Please enter a valid email address.";
+        }
+
+        if (data.phone && !/^\+?[0-9\s\-]{7,15}$/.test(data.phone)) {
+            newErrors.phone = "Please enter a valid phone number.";
+        }
+
+        if (!data.service) newErrors.service = "Please select a required service.";
+        if (!data.message?.trim()) newErrors.message = "Please provide some details about your requirement.";
+        if (!data.terms) newErrors.terms = "You must agree to the Privacy Policy.";
+
+        return newErrors;
+    };
+
+    // Clears the error for a specific field as soon as the user starts typing
+    const handleChange = (e) => {
+        const { name } = e.target;
+        if (errors[name]) {
+            setErrors((prev) => ({ ...prev, [name]: "" }));
+        }
+    };
+
+    const onSubmit = async (e) => {
         e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const payload = Object.fromEntries(formData.entries());
+
+        // Run validation
+        const validationErrors = validateForm(payload);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return; // Stop submission if errors exist
+        }
+
+        setErrors({});
         setSubmitting(true);
-        setTimeout(() => {
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/inquiry`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                toast.success("Enquiry received. We'll be in touch shortly.");
+                e.target.reset();
+            } else {
+                toast.error(data.message || "Failed to submit enquiry. Please try again.");
+            }
+        } catch (error) {
+            console.error("Submission error:", error);
+            toast.error("Network error. Please try again later.");
+        } finally {
             setSubmitting(false);
-            e.target.reset();
-            toast.success("Enquiry received. We'll be in touch shortly.");
-        }, 700);
+        }
     };
 
     return (
-        <form onSubmit={onSubmit} className="mt-6 space-y-4">
+        // Added 'noValidate' to disable native browser popup tooltips so our custom UI takes over
+        <form onSubmit={onSubmit} noValidate className="mt-6 space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
-                <TextField label="Full Name" name="name" required />
-                <TextField label="Company" name="company" required />
-                <TextField label="Work Email" name="email" type="email" required />
-                <TextField label="Phone" name="phone" type="tel" />
+                <TextField label="Full Name" name="name" required error={errors.name} onChange={handleChange} />
+                <TextField label="Company" name="company" required error={errors.company} onChange={handleChange} />
+                <TextField label="Work Email" name="email" type="email" required error={errors.email} onChange={handleChange} />
+                <TextField label="Phone" name="phone" type="tel" error={errors.phone} onChange={handleChange} />
             </div>
-            <SelectField label="Service Required" name="service" required>
+
+            <SelectField label="Service Required" name="service" required error={errors.service} onChange={handleChange}>
                 <option value="">Select a service…</option>
                 {SERVICES.map((s) => (
                     <option key={s.slug} value={s.slug}>{s.title}</option>
                 ))}
             </SelectField>
-            <SelectField label="Industry" name="industry">
+
+            <SelectField label="Industry" name="industry" error={errors.industry} onChange={handleChange}>
                 <option value="">Select your industry…</option>
                 {INDUSTRIES.map((i) => (
                     <option key={i} value={i}>{i}</option>
                 ))}
             </SelectField>
+
             <div>
-                <label className="text-sm font-semibold block mb-1.5">Message *</label>
+                <label className="text-sm font-semibold block mb-1.5">
+                    Message <span className="text-destructive">*</span>
+                </label>
                 <textarea
                     name="message"
                     required
                     rows={4}
+                    onChange={handleChange}
                     placeholder="Share a few details about your requirement…"
-                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 resize-none"
+                    className={`w-full rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 resize-none transition-colors ${errors.message
+                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                            : "border-border focus:border-brand focus:ring-brand/20"
+                        }`}
                 />
+                {errors.message && <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.message}</p>}
             </div>
-            <label className="flex items-start gap-2 text-xs text-muted-foreground">
-                <input type="checkbox" required className="mt-0.5 accent-[oklch(0.32_0.12_258)] shrink-0" />
-                <span>
-                    I have read and agree to the{" "}
-                    <Link to="/privacy" className="text-brand font-semibold hover:underline">Privacy Policy</Link>.
-                </span>
-            </label>
+
+            <div>
+                <label className="flex items-start gap-2 text-xs text-muted-foreground">
+                    <input
+                        type="checkbox"
+                        name="terms"
+                        onChange={handleChange}
+                        className="mt-0.5 accent-[oklch(0.32_0.12_258)] shrink-0"
+                    />
+                    <span>
+                        I have read and agree to the{" "}
+                        <Link to="/privacy" className="text-brand font-semibold hover:underline">Privacy Policy</Link>.
+                    </span>
+                </label>
+                {errors.terms && <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.terms}</p>}
+            </div>
+
             <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-full gradient-brand px-6 py-3.5 text-sm font-bold text-brand-foreground shadow-elegant hover:opacity-95 disabled:opacity-60 transition"
+                className="w-full rounded-full gradient-brand px-6 py-3.5 text-sm font-bold text-brand-foreground shadow-elegant hover:opacity-95 disabled:opacity-60 transition mt-2"
             >
                 {submitting ? "Sending…" : "Submit Enquiry"}
             </button>
@@ -180,7 +244,7 @@ function EnquiryForm() {
     );
 }
 
-function TextField({ label, name, type = "text", required }) {
+function TextField({ label, name, type = "text", required, error, onChange }) {
     return (
         <div>
             <label className="text-sm font-semibold block mb-1.5">
@@ -189,14 +253,18 @@ function TextField({ label, name, type = "text", required }) {
             <input
                 name={name}
                 type={type}
-                required={required}
-                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                onChange={onChange}
+                className={`w-full rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors ${error
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-border focus:border-brand focus:ring-brand/20"
+                    }`}
             />
+            {error && <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>}
         </div>
     );
 }
 
-function SelectField({ label, name, required, children }) {
+function SelectField({ label, name, required, error, onChange, children }) {
     return (
         <div>
             <label className="text-sm font-semibold block mb-1.5">
@@ -204,11 +272,15 @@ function SelectField({ label, name, required, children }) {
             </label>
             <select
                 name={name}
-                required={required}
-                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+                onChange={onChange}
+                className={`w-full rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors ${error
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-border focus:border-brand focus:ring-brand/20"
+                    }`}
             >
                 {children}
             </select>
+            {error && <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>}
         </div>
     );
 }
