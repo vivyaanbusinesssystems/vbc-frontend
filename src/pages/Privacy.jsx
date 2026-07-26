@@ -67,24 +67,24 @@ export default function Privacy() {
                             return (
                                 <div
                                     key={idx}
-                                    className="group rounded-3xl border border-border bg-card p-8 sm:p-10 hover:shadow-elegant hover:border-brand/40 transition-all"
+                                    className="group rounded-3xl border border-border bg-card p-6 sm:p-10 hover:shadow-elegant hover:border-brand/40 transition-all overflow-hidden"
                                 >
                                     <div className="flex items-center gap-4 mb-4">
                                         <div className="grid h-12 w-12 place-items-center rounded-xl bg-brand-soft text-brand shrink-0">
                                             <Icon className="h-6 w-6" />
                                         </div>
-                                        <h2 className="text-2xl font-bold text-foreground">
+                                        <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                                             {section.title}
                                         </h2>
                                     </div>
-                                    <p className="text-muted-foreground leading-relaxed text-lg pl-0 sm:pl-16">
+                                    <p className="text-muted-foreground leading-relaxed text-base sm:text-lg pl-0 sm:pl-16">
                                         {section.content}
                                     </p>
                                     {section.link && (
-                                        <div className="pl-0 sm:pl-16 mt-4">
+                                        <div className="pl-0 sm:pl-16 mt-4 w-full">
                                             <a
                                                 href={section.link}
-                                                className="inline-flex items-center text-brand font-semibold hover:underline"
+                                                className="inline-flex items-center text-brand font-semibold hover:underline break-all"
                                             >
                                                 {section.linkText}
                                             </a>
