@@ -1,13 +1,25 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
 import { CATEGORIES, SERVICES } from "../lib/services-data";
 
 export default function Services() {
     const cats = Object.keys(CATEGORIES);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        // Instantly lands the user at the top of the page when navigating here
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
+        // Triggers the smooth fade-in effect
+        const timer = setTimeout(() => setIsVisible(true), 50);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
-        <>
-            <section className="gradient-hero py-20">
+        <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+            {/* Adjusted padding for mobile/desktop parity */}
+            <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20">
                 <div className="container-page max-w-3xl text-center">
                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Our Services</p>
                     <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold">
@@ -54,6 +66,6 @@ export default function Services() {
                     </section>
                 );
             })}
-        </>
+        </div>
     );
 }

@@ -1,11 +1,23 @@
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { getServiceBySlug, SERVICES } from "../lib/services-data";
-import  LeadForm  from "../pages/LeadForm";
+import LeadForm from "../pages/LeadForm";
 
 export default function ServiceDetail() {
     const { slug } = useParams();
     const service = getServiceBySlug(slug);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        // Runs on initial mount AND whenever the user clicks a related service (slug changes)
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
+        // Reset visibility so the fade-in happens again when navigating between services
+        setIsVisible(false);
+        const timer = setTimeout(() => setIsVisible(true), 50);
+        return () => clearTimeout(timer);
+    }, [slug]); // Added slug as a dependency
 
     if (!service) {
         return (
@@ -23,9 +35,9 @@ export default function ServiceDetail() {
     ).slice(0, 3);
 
     return (
-        <>
-            {/* Hero Banner */}
-            <section className="gradient-hero py-20 border-b border-border">
+        <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+            {/* Hero Banner - Adjusted padding for mobile/desktop parity */}
+            <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20 border-b border-border">
                 <div className="container-page max-w-4xl">
                     <nav className="text-xs text-muted-foreground mb-4 flex items-center gap-2">
                         <Link to="/" className="hover:text-brand">Home</Link>
@@ -159,6 +171,6 @@ export default function ServiceDetail() {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     );
 }

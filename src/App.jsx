@@ -11,8 +11,9 @@ import About from "../src/pages/About";
 import Services from "../src/pages/Services";
 import ServiceDetail from "../src/pages/ServiceDetail";
 import Industries from "../src/pages/Industries";
-import Careers from "../src/pages/Careers";
 import Contact from "../src/pages/Contact";
+import Privacy from "../src/pages/Privacy"; // NEW IMPORT
+import Terms from "../src/pages/Terms";     // NEW IMPORT
 
 const queryClient = new QueryClient();
 
@@ -57,8 +58,12 @@ export default function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/services/:slug" element={<ServiceDetail />} />
             <Route path="/industries" element={<Industries />} />
-            <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<Contact />} />
+
+            {/* NEW ROUTES */}
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

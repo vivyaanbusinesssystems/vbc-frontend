@@ -25,8 +25,9 @@ const Linkedin = (props) => (
 
 export default function Footer() {
     const coreServices = SERVICES.slice(0, 6);
+
     return (
-        <footer className="mt-24 bg-primary text-primary-foreground">
+        <footer className="mt-24 bg-primary text-primary-foreground hidden md:block">
             <div className="container-page py-16 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
                 <div>
                     <div className="flex items-center gap-2">
@@ -63,12 +64,11 @@ export default function Footer() {
                         Quick Links
                     </h4>
                     <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/70">
-                        <li><Link to="/" className="hover:text-highlight">Home</Link></li>
-                        <li><Link to="/about" className="hover:text-highlight">About Us</Link></li>
-                        <li><Link to="/services" className="hover:text-highlight">Services</Link></li>
-                        <li><Link to="/industries" className="hover:text-highlight">Industries</Link></li>
-                        <li><Link to="/careers" className="hover:text-highlight">Careers</Link></li>
-                        <li><Link to="/contact" className="hover:text-highlight">Contact Us</Link></li>
+                        <li><Link to="/" className="hover:text-highlight transition">Home</Link></li>
+                        <li><Link to="/about" className="hover:text-highlight transition">About Us</Link></li>
+                        <li><Link to="/services" className="hover:text-highlight transition">Services</Link></li>
+                        <li><Link to="/industries" className="hover:text-highlight transition">Industries</Link></li>
+                        <li><Link to="/contact" className="hover:text-highlight transition">Contact Us</Link></li>
                     </ul>
                 </div>
 
@@ -81,7 +81,7 @@ export default function Footer() {
                             <li key={s.slug}>
                                 <Link
                                     to={`/services/${s.slug}`}
-                                    className="hover:text-highlight"
+                                    className="hover:text-highlight transition"
                                 >
                                     {s.title}
                                 </Link>
@@ -97,15 +97,15 @@ export default function Footer() {
                     <ul className="mt-4 space-y-3 text-sm text-primary-foreground/70">
                         <li className="flex gap-3">
                             <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-highlight" />
-                            <span>Level 4, Prestige Tower, MG Road, Bengaluru 560001, India</span>
+                            <span>1157/9 Naya Nagar South, Sirwara Road, Sultanpur, 228001, Uttar Pradesh, India</span>
                         </li>
                         <li className="flex gap-3">
                             <Phone className="h-4 w-4 mt-0.5 shrink-0 text-highlight" />
-                            <a href="tel:+918000000000" className="hover:text-highlight">+91 80 0000 0000</a>
+                            <a href="tel:+919151566767" className="hover:text-highlight transition">+91 91515 66767</a>
                         </li>
                         <li className="flex gap-3">
                             <Mail className="h-4 w-4 mt-0.5 shrink-0 text-highlight" />
-                            <a href="mailto:hello@vivyaan.com" className="hover:text-highlight">hello@vivyaan.com</a>
+                            <a href="mailto:support@vivyaanbusinesssystems.com" className="hover:text-highlight transition">support@vivyaanbusinesssystems.com</a>
                         </li>
                     </ul>
                 </div>
@@ -113,10 +113,10 @@ export default function Footer() {
 
             <div className="border-t border-white/10">
                 <div className="container-page py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-primary-foreground/60">
-                    <p>© {new Date().getFullYear()} Vivyaan Business Systems. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Vivyaan Business Systems Pvt. Ltd. All rights reserved.</p>
                     <div className="flex gap-5">
-                        <a href="#" className="hover:text-highlight">Privacy Policy</a>
-                        <a href="#" className="hover:text-highlight">Terms of Service</a>
+                        <Link to="/privacy" className="hover:text-highlight transition">Privacy Policy</Link>
+                        <Link to="/terms" className="hover:text-highlight transition">Terms of Service</Link>
                     </div>
                 </div>
             </div>

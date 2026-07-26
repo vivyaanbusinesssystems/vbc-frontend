@@ -1,13 +1,27 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { INDUSTRIES, SERVICES } from "../lib/services-data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export default function Contact() {
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        // Instantly lands the user at the top of the page
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
+        // Triggers the smooth fade-in effect
+        const timer = setTimeout(() => setIsVisible(true), 50);
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
-        <>
-            <section className="gradient-hero py-20">
+        // Wrapper for smooth mounting and mobile navbar clearance
+        <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+
+            {/* Adjusted padding for mobile/desktop parity */}
+            <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20">
                 <div className="container-page max-w-3xl text-center">
                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Contact</p>
                     <h1 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-extrabold">Get in Touch</h1>
@@ -22,28 +36,42 @@ export default function Contact() {
                 <div className="container-page grid lg:grid-cols-5 gap-10">
                     <div className="lg:col-span-2 space-y-6">
                         <ContactCard icon={MapPin} title="Head Office">
-                            Level 4, Prestige Tower<br />MG Road, Bengaluru 560001<br />Karnataka, India
+                            1157/9 Naya Nagar South<br />Sirwara Road Sultanpur, 228001<br />Uttar Pradesh, India
                         </ContactCard>
                         <ContactCard icon={Phone} title="Phone">
-                            <a href="tel:+918000000000" className="hover:text-brand">+91 80 0000 0000</a>
-                            <br />
-                            <a href="tel:+911100000000" className="hover:text-brand">+91 11 0000 0000</a>
+                            <a href="tel:+919151566767" className="hover:text-brand">+91 91515 66767</a>
                         </ContactCard>
                         <ContactCard icon={Mail} title="Email">
-                            <a href="mailto:hello@vivyaan.com" className="hover:text-brand">hello@vivyaan.com</a>
-                            <br />
-                            <a href="mailto:careers@vivyaan.com" className="hover:text-brand">careers@vivyaan.com</a>
+                            <a href="mailto:support@vivyaan.com" className="hover:text-brand">support@vivyaan.com</a>
                         </ContactCard>
                         <ContactCard icon={Clock} title="Business Hours">
                             Mon – Fri: 9:00 AM – 7:00 PM IST<br />Sat: 10:00 AM – 2:00 PM IST
                         </ContactCard>
-                        <div className="rounded-2xl overflow-hidden border border-border shadow-card aspect-video">
+
+                        {/* Interactive Grayscale Map */}
+                        <div className="w-full h-75 sm:h-100 rounded-3xl overflow-hidden border border-border shadow-card relative mt-6">
                             <iframe
-                                title="Vivyaan office location"
-                                src="https://www.openstreetmap.org/export/embed.html?bbox=77.59%2C12.96%2C77.63%2C12.99&layer=mapnik&marker=12.9756%2C77.6100"
-                                className="w-full h-full"
-                                loading="lazy"
-                            />
+                                title="Vivyaan Business Systems Location"
+                                width="100%"
+                                height="100%"
+                                frameBorder="0"
+                                scrolling="no"
+                                marginHeight="0"
+                                marginWidth="0"
+                                src="https://www.openstreetmap.org/export/embed.html?bbox=82.0528%2C26.2446%2C82.0928%2C26.2846&layer=mapnik&marker=26.2646%2C82.0728"
+                                className="grayscale-20 contrast-125 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+                            ></iframe>
+
+                            <div className="absolute bottom-4 right-4 z-10">
+                                <a
+                                    href="https://www.openstreetmap.org/?mlat=26.2646&mlon=82.0728#map=15/26.2646/82.0728"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="rounded-full bg-background/90 backdrop-blur border border-border px-4 py-2 text-xs font-semibold text-brand shadow-sm hover:bg-brand hover:text-brand-foreground transition"
+                                >
+                                    View Larger Map
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -58,7 +86,7 @@ export default function Contact() {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     );
 }
 
@@ -78,6 +106,7 @@ function ContactCard({ icon: Icon, title, children }) {
 
 function EnquiryForm() {
     const [submitting, setSubmitting] = useState(false);
+
     const onSubmit = (e) => {
         e.preventDefault();
         setSubmitting(true);
@@ -87,6 +116,7 @@ function EnquiryForm() {
             toast.success("Enquiry received. We'll be in touch shortly.");
         }, 700);
     };
+
     return (
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
@@ -121,7 +151,7 @@ function EnquiryForm() {
                 <input type="checkbox" required className="mt-0.5 accent-[oklch(0.32_0.12_258)]" />
                 <span>
                     I have read and agree to the{" "}
-                    <a href="#" className="text-brand font-semibold">Privacy Policy</a>.
+                    <Link to="/privacy" className="text-brand font-semibold hover:underline">Privacy Policy</Link>.
                 </span>
             </label>
             <button
