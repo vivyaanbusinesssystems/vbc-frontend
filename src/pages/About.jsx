@@ -4,6 +4,7 @@ import {
     Target, Eye, Heart, Award, Users, Globe2,
     Shield, Lightbulb, CheckCircle, ArrowRight, Layers
 } from "lucide-react";
+import SEO from "./SEO";
 
 export default function About() {
     const [isVisible, setIsVisible] = useState(false);
@@ -47,6 +48,12 @@ export default function About() {
 
     return (
         <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+
+            <SEO
+                title="About Us"
+                description="Learn about Vivyaan Business Systems' mission, vision, and core values. We are a trusted partner for enterprise talent, technology, and operations."
+                url="https://www.vivyaanbusinesssystems.com/about"
+            />
 
             {/* Adjusted padding for mobile/desktop parity */}
             <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20">

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { getServiceBySlug, SERVICES } from "../lib/services-data";
 import LeadForm from "../pages/LeadForm";
+import SEO from "./SEO";
 
 export default function ServiceDetail() {
     const { slug } = useParams();
@@ -22,6 +23,7 @@ export default function ServiceDetail() {
     if (!service) {
         return (
             <div className="container-page py-24 text-center">
+                <SEO title="Service Not Found" />
                 <h1 className="text-3xl font-bold">Service not found</h1>
                 <Link to="/services" className="mt-6 inline-flex text-brand font-semibold">
                     Browse all services
@@ -36,6 +38,13 @@ export default function ServiceDetail() {
 
     return (
         <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+            {/* Dynamically loads SEO data based on the specific service */}
+            <SEO
+                title={service.title}
+                description={service.intro}
+                url={`https://www.vivyaanbusinesssystems.com/services/${service.slug}`}
+            />
+
             {/* Hero Banner - Adjusted padding for mobile/desktop parity */}
             <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20 border-b border-border">
                 <div className="container-page max-w-4xl">

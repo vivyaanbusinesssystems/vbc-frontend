@@ -5,6 +5,7 @@ import {
     GraduationCap, HardHat, Landmark, Server, Car, Pill,
     Cog, ShoppingCart, BedDouble
 } from "lucide-react";
+import SEO from "./SEO";
 
 // Updated perfectly to match the client's "Industries We Serve" list
 const INDUSTRY_DATA = [
@@ -100,6 +101,13 @@ export default function Industries() {
     return (
         // Added pb-20 lg:pb-0 to clear the mobile bottom navbar, matching the Home layout
         <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+
+            {/* SEO Wrapper for the Industries Page */}
+            <SEO
+                title="Industries We Serve"
+                description="Vivyaan Business Systems provides domain expertise across IT, Healthcare, Manufacturing, Banking, Retail, and more."
+                url="https://www.vivyaanbusinesssystems.com/industries"
+            />
 
             {/* Reduced pt-28 to pt-16 for mobile, while keeping pt-28 (lg:pt-28) for desktop to clear the top sticky navbar comfortably */}
             <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20">

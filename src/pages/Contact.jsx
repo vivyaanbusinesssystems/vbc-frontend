@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { INDUSTRIES, SERVICES } from "../lib/services-data";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import SEO from "./SEO";
 
 export default function Contact() {
     const [isVisible, setIsVisible] = useState(false);
@@ -18,6 +19,12 @@ export default function Contact() {
 
     return (
         <div className={`overflow-x-hidden transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+            <SEO
+                title="Contact Us"
+                description="Get in touch with Vivyaan Business Systems. Send us an enquiry, call our team, or visit our Head Office in Sultanpur."
+                url="https://www.vivyaanbusinesssystems.com/contact"
+            />
+
             <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20">
                 <div className="container-page max-w-3xl text-center">
                     <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Contact</p>
@@ -210,8 +217,8 @@ function EnquiryForm() {
                     onChange={handleChange}
                     placeholder="Share a few details about your requirement…"
                     className={`w-full rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 resize-none transition-colors ${errors.message
-                            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                            : "border-border focus:border-brand focus:ring-brand/20"
+                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-border focus:border-brand focus:ring-brand/20"
                         }`}
                 />
                 {errors.message && <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.message}</p>}
@@ -255,8 +262,8 @@ function TextField({ label, name, type = "text", required, error, onChange }) {
                 type={type}
                 onChange={onChange}
                 className={`w-full rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors ${error
-                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                        : "border-border focus:border-brand focus:ring-brand/20"
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                    : "border-border focus:border-brand focus:ring-brand/20"
                     }`}
             />
             {error && <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>}
@@ -274,8 +281,8 @@ function SelectField({ label, name, required, error, onChange, children }) {
                 name={name}
                 onChange={onChange}
                 className={`w-full rounded-xl border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors ${error
-                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                        : "border-border focus:border-brand focus:ring-brand/20"
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                    : "border-border focus:border-brand focus:ring-brand/20"
                     }`}
             >
                 {children}

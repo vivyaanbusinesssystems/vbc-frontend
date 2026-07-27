@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState, useCallback } from "react";
 import heroImg from "../assets/hero.jpg";
+import SEO from "./SEO";
 
 export default function Home() {
     const [isVisible, setIsVisible] = useState(false);
@@ -35,6 +36,11 @@ export default function Home() {
     return (
         // Reduced from pb-24 to pb-20 so it just tightly clears the 4rem (64px) bottom mobile navbar
         <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+            <SEO
+                title="Home"
+                description="At Vivyaan Business Systems Pvt. Ltd., we help businesses grow by delivering reliable workforce solutions and innovative technology services."
+                url="https://www.vivyaanbusinesssystems.com/"
+            />
             <Hero />
             <CompanyIntro />
             <CoreServices />

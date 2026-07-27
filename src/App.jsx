@@ -1,27 +1,43 @@
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
 
+// Synchronous Imports (Keep layout components loading instantly)
 import Navbar from "../src/pages/Navbar";
 import Footer from "../src/pages/Footer";
 import WhatsAppWidget from "../src/pages/WhatsAppWidget";
 
-// Page Imports
-import Home from "../src/pages/Home"
-import About from "../src/pages/About";
-import Services from "../src/pages/Services";
-import ServiceDetail from "../src/pages/ServiceDetail";
-import Industries from "../src/pages/Industries";
-import Contact from "../src/pages/Contact";
-import Privacy from "../src/pages/Privacy"; // NEW IMPORT
-import Terms from "../src/pages/Terms";     // NEW IMPORT
+// Lazy Loaded Page Imports (Code splitting for performance)
+const Home = lazy(() => import("../src/pages/Home"));
+const About = lazy(() => import("../src/pages/About"));
+const Services = lazy(() => import("../src/pages/Services"));
+const ServiceDetail = lazy(() => import("../src/pages/ServiceDetail"));
+const Industries = lazy(() => import("../src/pages/Industries"));
+const Contact = lazy(() => import("../src/pages/Contact"));
+const Privacy = lazy(() => import("../src/pages/Privacy"));
+const Terms = lazy(() => import("../src/pages/Terms"));
 
 const queryClient = new QueryClient();
+
+// Smooth loading fallback while pages are being fetched
+function PageLoader() {
+  return (
+    <div className="flex min-h-[60vh] w-full items-center justify-center">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand border-t-transparent"></div>
+    </div>
+  );
+}
 
 function Layout({ children }) {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        <Suspense fallback={<PageLoader />}>
+          {children}
+        </Suspense>
+      </main>
       <Footer />
       <WhatsAppWidget />
     </div>
@@ -37,7 +53,7 @@ function NotFound() {
         <div className="mt-6">
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Go home
           </a>
@@ -50,24 +66,26 @@ function NotFound() {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/services/:slug" element={<ServiceDetail />} />
-            <Route path="/industries" element={<Industries />} />
-            <Route path="/contact" element={<Contact />} />
+      <HelmetProvider>
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/services/:slug" element={<ServiceDetail />} />
+              <Route path="/industries" element={<Industries />} />
+              <Route path="/contact" element={<Contact />} />
 
-            {/* NEW ROUTES */}
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
+              {/* Legal Routes (Paths matched to the Footer links) */}
+              <Route path="/privacy-policy" element={<Privacy />} />
+              <Route path="/terms-of-service" element={<Terms />} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

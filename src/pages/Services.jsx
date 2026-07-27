@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { CATEGORIES, SERVICES } from "../lib/services-data";
+import SEO from "./SEO";
 
 export default function Services() {
     const cats = Object.keys(CATEGORIES);
@@ -18,6 +19,12 @@ export default function Services() {
 
     return (
         <div className={`transition-opacity duration-700 ease-out pb-20 lg:pb-0 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+            <SEO
+                title="Our Services"
+                description="Explore Vivyaan Business Systems' full-spectrum solutions across workforce staffing, technology engineering, and digital operations."
+                url="https://www.vivyaanbusinesssystems.com/services"
+            />
+
             {/* Adjusted padding for mobile/desktop parity */}
             <section className="gradient-hero pt-16 lg:pt-28 pb-16 lg:pb-20">
                 <div className="container-page max-w-3xl text-center">
